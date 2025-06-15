@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Tahu - Search Website</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa, #14b8a6);
+            min-height: 100vh;
+            color: white;
+            transition: all 0.7s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1f2937, #7c3aed, #374151);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 24px 0;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            padding: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Main Content */
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px);
+            padding: 0 24px;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .main-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+        }
+
+        .title-cari {
+            color: #fde047;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Search Section */
+        .search-section {
+            width: 100%;
+            max-width: 640px;
+            margin-bottom: 48px;
+        }
+
+        .search-bar {
+            background: white;
+            border-radius: 50px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.35);
+        }
+
+        .search-input-container {
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1.125rem;
+            color: #374151;
+            margin-left: 16px;
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .action-btn {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(4px);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .search-btn {
+            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #374151;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-btn:hover {
+            background: white;
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Trending Section */
+        .trending-section {
+            width: 100%;
+            max-width: 1024px;
+        }
+
+        .trending-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            gap: 12px;
+        }
+
+        .trending-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .trending-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            text-align: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .trending-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding: 24px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0.7;
+            font-size: 0.875rem;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        /* Popup Menu */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .popup-overlay.active {
+            display: flex;
+        }
+
+        .popup-menu {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.active .popup-menu {
+            transform: scale(1);
+        }
+
+        .popup-header {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #374151;
+        }
+
+        .popup-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .popup-subtitle {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .menu-item {
+            padding: 20px;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+        }
+
+        .menu-item:nth-child(1) {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+        }
+
+        .menu-item:nth-child(1):hover {
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+        }
+
+        .menu-item:nth-child(2) {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .menu-item:nth-child(2):hover {
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+        }
+
+        .menu-item:nth-child(3) {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        .menu-item:nth-child(3):hover {
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+        }
+
+        .menu-item:nth-child(4) {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+        }
+
+        .menu-item:nth-child(4):hover {
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+
+        .menu-item:nth-child(5) {
+            background: linear-gradient(135deg, #06b6d4, #67e8f9);
+            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
+            grid-column: 1 / -1;
+        }
+
+        .menu-item:nth-child(5):hover {
+            box-shadow: 0 8px 24px rgba(6, 182, 212, 0.4);
+        }
+
+        .close-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: #e5e7eb;
+        }
+
+        /* Icons */
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .trending-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .popup-menu {
+                padding: 24px;
+            }
+
+            .menu-grid {
+                gap: 12px;
+            }
+
+            .menu-item {
+                padding: 16px;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <button class="icon-btn" id="darkModeBtn" aria-label="Toggle dark mode">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+            <button class="icon-btn" id="menuBtn" aria-label="Menu">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="6" height="6"></rect>
+                    <rect x="15" y="3" width="6" height="6"></rect>
+                    <rect x="3" y="15" width="6" height="6"></rect>
+                    <rect x="15" y="15" width="6" height="6"></rect>
+                    <circle cx="12" cy="12" r="1"></circle>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <path d="M8 32C8 32 12 28 20 28C28 28 32 32 32 32" stroke="#fb923c" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M12 24C12 24 14 22 20 22C26 22 28 24 28 24" stroke="#fb923c" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M16 16C16 16 17 15 20 15C23 15 24 16 24 16" stroke="#fb923c" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="20" cy="12" r="3" fill="#fb923c"/>
+                    </svg>
+                </div>
+                
+                <h1 class="main-title">
+                    <span class="title-cari">CARI</span> TAHU
+                </h1>
+                <p class="subtitle">Temukan semua yang ingin Anda ketahui</p>
+            </div>
+
+            <!-- Search Section -->
+            <div class="search-section">
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <div class="search-input-container">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            placeholder="Cari informasi, berita, tutorial, dan lainnya..."
+                            id="searchInput"
+                        >
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn" aria-label="Camera search">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </button>
+                    <button class="action-btn" aria-label="Voice search">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Search Button -->
+                <div style="text-align: center;">
+                    <button class="search-btn" id="searchBtn">Cari Sekarang</button>
+                </div>
+            </div>
+
+            <!-- Trending Section -->
+            <div class="trending-section">
+                <div class="trending-header">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"></polyline>
+                        <polyline points="17,6 23,6 23,12"></polyline>
+                    </svg>
+                    <h2>Pencarian Trending</h2>
+                </div>
+                
+                <div class="trending-grid">
+                    <button class="trending-item" onclick="setSearch('Cuaca hari ini')">Cuaca hari ini</button>
+                    <button class="trending-item" onclick="setSearch('Resep masakan Indonesia')">Resep masakan Indonesia</button>
+                    <button class="trending-item" onclick="setSearch('Berita terkini')">Berita terkini</button>
+                    <button class="trending-item" onclick="setSearch('Cara belajar coding')">Cara belajar coding</button>
+                    <button class="trending-item" onclick="setSearch('Tempat wisata Jakarta')">Tempat wisata Jakarta</button>
+                    <button class="trending-item" onclick="setSearch('Tutorial React')">Tutorial React</button>
+                    <button class="trending-item" onclick="setSearch('Kesehatan mental')">Kesehatan mental</button>
+                    <button class="trending-item" onclick="setSearch('Olahraga di rumah')">Olahraga di rumah</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#">Tentang</a>
+                    <a href="#">Bantuan</a>
+                    <a href="#">Privasi</a>
+                    <a href="#">Syarat</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Bahasa Indonesia</a>
+                    <a href="#">English</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Popup Menu -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-menu">
+            <div class="popup-header">
+                <h3 class="popup-title">Menu Aplikasi</h3>
+                <p class="popup-subtitle">Pilih layanan yang ingin Anda gunakan</p>
+            </div>
+            
+            <div class="menu-grid">
+                <button class="menu-item" onclick="navigateTo('tes-iq')">
+                    Tes IQ
+                </button>
+                <button class="menu-item" onclick="navigateTo('marketplace')">
+                    Marketplace
+                </button>
+                <button class="menu-item" onclick="navigateTo('berita')">
+                    Berita
+                </button>
+                <button class="menu-item" onclick="navigateTo('film')">
+                    Film
+                </button>
+                <button class="menu-item" onclick="navigateTo('selesaikan-soal')">
+                    Selesaikan Soal
+                </button>
+            </div>
+            
+            <button class="close-btn" onclick="closePopup()">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        const menuBtn = document.getElementById('menuBtn');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+
+        // Dark Mode Toggle
+        let isDarkMode = false;
+        
+        darkModeBtn.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            
+            // Update icon
+            const icon = darkModeBtn.querySelector('svg');
+            if (isDarkMode) {
+                icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+            } else {
+                icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+            }
+        });
+
+        // Menu Popup
+        menuBtn.addEventListener('click', () => {
+            popupOverlay.classList.add('active');
+        });
+
+        // Close popup when clicking overlay
+        popupOverlay.addEventListener('click', (e) => {
+            if (e.target === popupOverlay) {
+                closePopup();
+            }
+        });
+
+        // Close popup function
+        function closePopup() {
+            popupOverlay.classList.remove('active');
+        }
+
+        // Navigation function for menu items
+        function navigateTo(page) {
+            // You can replace these with actual URLs
+            const urls = {
+                'tes-iq': '#tes-iq',
+                'marketplace': '#marketplace',
+                'berita': '#berita',
+                'film': '#film',
+                'selesaikan-soal': '#selesaikan-soal'
+            };
+            
+            console.log(`Navigating to: ${page}`);
+            alert(`Navigasi ke: ${page.replace('-', ' ').toUpperCase()}\n\nURL: ${urls[page] || '#'}`);
+            closePopup();
+        }
+
+        // Search functionality
+        function performSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                console.log('Searching for:', query);
+                alert(`Mencari: "${query}"`);
+            }
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Set search from trending items
+        function setSearch(query) {
+            searchInput.value = query;
+            searchInput.focus();
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // ESC to close popup
+            if (e.key === 'Escape' && popupOverlay.classList.contains('active')) {
+                closePopup();
+            }
+            
+            // Ctrl/Cmd + K to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+
+        // Focus search input on page load
+        window.addEventListener('load', () => {
+            searchInput.focus();
+        });
+    </script>
+</body>
+</html>
