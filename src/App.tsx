@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Search, Camera, Mic, Grid3X3, Moon, Sun, TrendingUp, X } from 'lucide-react';
 import FilmPage from './components/FilmPage';
+import EnhancedFilmPage from './components/EnhancedFilmPage';
 import NewsPage from './components/NewsPage';
 import MarketplacePage from './components/MarketplacePage';
+import SearchRoute from './components/SearchRoute';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -43,7 +45,7 @@ function App() {
 
   const handleMenuItemClick = (item: typeof menuItems[0]) => {
     if (item.id === 'film') {
-      setCurrentPage('film');
+      setCurrentPage('enhanced-film');
     } else if (item.id === 'berita') {
       setCurrentPage('berita');
     } else if (item.id === 'marketplace') {
@@ -61,8 +63,10 @@ function App() {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      console.log('Searching for:', searchQuery);
-      alert(`Mencari: "${searchQuery}"`);
+      // Navigate to search route
+      setCurrentPage('search');
+      // In a real app, you'd use React Router here
+      window.history.pushState({}, '', `/cari?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -84,7 +88,17 @@ function App() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isMenuOpen]);
 
-  // Show Film Page
+  // Show Search Route
+  if (currentPage === 'search') {
+    return <SearchRoute />;
+  }
+
+  // Show Enhanced Film Page
+  if (currentPage === 'enhanced-film') {
+    return <EnhancedFilmPage onBack={handleBackToHome} />;
+  }
+
+  // Show Film Page (original)
   if (currentPage === 'film') {
     return <FilmPage onBack={handleBackToHome} />;
   }
